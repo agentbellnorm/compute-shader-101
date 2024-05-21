@@ -24,8 +24,13 @@ var<storage, read_write> m1: DataBuf;
 @group(0) @binding(1)
 var<storage, read_write> m2: DataBuf;
 
+fn index(x: u32, y: u32) -> u32 {
+    return (25u *  x) + y;
+}
+
 @compute
-@workgroup_size(1)
-fn main(@builtin(global_invocation_id) global_id: vec3<u32>) {
-    m1.data[global_id.x] = m1.data[global_id.x] + m2.data[global_id.x];
+@workgroup_size(5, 5)
+fn main(@builtin(global_invocation_id) global_id: vec3<u32>, @builtin(local_invocation_id) local_id: vec3<u32>) {
+    let id = index(global_id.x, global_id.y);
+    m1.data[id] = f32(id);
 }
